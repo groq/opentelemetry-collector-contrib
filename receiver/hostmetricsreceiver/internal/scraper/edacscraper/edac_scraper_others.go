@@ -21,10 +21,10 @@ func newEDACMetricsScraper(_ context.Context, _ scraper.Settings, _ *Config) *ed
 
 type edacScraper struct{}
 
-func (s *edacScraper) start(ctx context.Context, _ component.Host) error {
+func (s *edacScraper) start(_ context.Context, _ component.Host) error {
 	return errors.New("EDAC scraper is only supported on Linux")
 }
 
-func (s *edacScraper) scrape(ctx context.Context) (pmetric.Metrics, error) {
+func (s *edacScraper) scrape(_ context.Context) (pmetric.Metrics, error) {
 	return pmetric.NewMetrics(), errors.New("EDAC scraper is only supported on Linux")
 }

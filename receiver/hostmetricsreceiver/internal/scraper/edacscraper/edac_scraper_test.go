@@ -15,7 +15,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/collector/component/componenttest"
-
 	"go.opentelemetry.io/collector/scraper/scrapertest"
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/receiver/hostmetricsreceiver/internal/scraper/edacscraper/internal/metadata"
@@ -71,10 +70,10 @@ func TestScrape(t *testing.T) {
 		{
 			name:   "No EDAC controllers found",
 			config: &Config{MetricsBuilderConfig: metadata.DefaultMetricsBuilderConfig()},
-			mockGlob: func(pattern string) ([]string, error) {
+			mockGlob: func(_ string) ([]string, error) {
 				return []string{}, nil // No controllers found
 			},
-			mockReadFile: func(filename string) ([]byte, error) {
+			mockReadFile: func(_ string) ([]byte, error) {
 				return nil, errors.New("should not be called")
 			},
 			expectMetrics:        true,
@@ -83,10 +82,10 @@ func TestScrape(t *testing.T) {
 		{
 			name:   "Glob error",
 			config: &Config{MetricsBuilderConfig: metadata.DefaultMetricsBuilderConfig()},
-			mockGlob: func(pattern string) ([]string, error) {
+			mockGlob: func(_ string) ([]string, error) {
 				return nil, errors.New("glob failed")
 			},
-			mockReadFile: func(filename string) ([]byte, error) {
+			mockReadFile: func(_ string) ([]byte, error) {
 				return nil, errors.New("should not be called")
 			},
 			expectMetrics: false,
@@ -101,7 +100,7 @@ func TestScrape(t *testing.T) {
 				}
 				return []string{}, nil
 			},
-			mockReadFile: func(filename string) ([]byte, error) {
+			mockReadFile: func(_ string) ([]byte, error) {
 				return nil, errors.New("read failed")
 			},
 			expectMetrics: false,

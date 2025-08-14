@@ -29,8 +29,8 @@ const (
 )
 
 var (
-	memControllerRE = regexp.MustCompile(`.*devices/system/edac/mc/mc([0-9]+)`)
-	memCsrowRE      = regexp.MustCompile(`.*devices/system/edac/mc/mc[0-9]+/csrow([0-9]+)`)
+	memControllerRE = regexp.MustCompile(`.*devices/system/edac/mc/mc(\d+)`)
+	memCsrowRE      = regexp.MustCompile(`.*devices/system/edac/mc/mc\d+/csrow(\d+)`)
 )
 
 // scraper for EDAC Metrics
@@ -54,12 +54,12 @@ func newEDACMetricsScraper(_ context.Context, settings scraper.Settings, cfg *Co
 	}
 }
 
-func (s *edacScraper) start(ctx context.Context, _ component.Host) error {
+func (s *edacScraper) start(_ context.Context, _ component.Host) error {
 	s.mb = metadata.NewMetricsBuilder(s.config.MetricsBuilderConfig, s.settings, metadata.WithStartTime(pcommon.Timestamp(time.Now().UnixNano())))
 	return nil
 }
 
-func (s *edacScraper) scrape(ctx context.Context) (pmetric.Metrics, error) {
+func (s *edacScraper) scrape(_ context.Context) (pmetric.Metrics, error) {
 	now := pcommon.NewTimestampFromTime(time.Now())
 
 	// Find all memory controllers
