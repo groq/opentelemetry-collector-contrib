@@ -77,7 +77,7 @@ func TestScrape(t *testing.T) {
 				return nil, errors.New("should not be called")
 			},
 			expectMetrics:        true,
-			expectedMetricsCount: 1, // Empty metrics object
+			expectedMetricsCount: 0, // No data points recorded
 		},
 		{
 			name:   "Glob error",

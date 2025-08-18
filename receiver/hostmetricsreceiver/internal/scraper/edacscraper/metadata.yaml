@@ -5,8 +5,9 @@ status:
   stability:
     beta: [metrics]
   distributions: [contrib]
+  unsupported_platforms: [darwin, windows, freebsd, openbsd]
   codeowners:
-    active: [dmitryax, braydonk]
+    active: [akasprzok,fujin]
 
 sem_conv_version: 1.9.0
 
