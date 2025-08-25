@@ -1,0 +1,15 @@
+type: sel
+
+status:
+  class: receiver
+  stability:
+    alpha: [logs]
+  codeowners:
+    active: [akasprzok]
+    seeking_new: true
+
+tests:
+  config:
+    username: user
+    password: pass
+    host: localhost
