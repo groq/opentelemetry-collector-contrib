@@ -4,6 +4,8 @@
 package selInputOperator // import "github.com/open-telemetry/opentelemetry-collector-contrib/pkg/stanza/operator/input/stdin"
 
 import (
+	"time"
+
 	"go.opentelemetry.io/collector/component"
 
 	"github.com/bougou/go-ipmi"
@@ -35,9 +37,10 @@ func NewConfig(operatorID string) *Config {
 type Config struct {
 	helper.InputConfig `mapstructure:",squash"`
 
-	Host     string `mapstructure:"host"`
-	User     string `mapstructure:"user"`
-	Password string `mapstructure:"password"`
+	Host               string        `mapstructure:"host"`
+	User               string        `mapstructure:"user"`
+	Password           string        `mapstructure:"password"`
+	CollectionInterval time.Duration `mapstructure:"collection_interval"`
 }
 
 // Build will build a stdin input operator.

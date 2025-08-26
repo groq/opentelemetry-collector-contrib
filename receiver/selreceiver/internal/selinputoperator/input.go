@@ -6,6 +6,7 @@ package selInputOperator // import "github.com/open-telemetry/opentelemetry-coll
 import (
 	"context"
 	"sync"
+	"time"
 
 	"go.uber.org/zap"
 
@@ -19,9 +20,12 @@ import (
 // Input is an operator that reads input from stdin
 type Input struct {
 	helper.InputOperator
-	wg         sync.WaitGroup
-	cancel     context.CancelFunc
-	ipmiClient *ipmi.Client
+	wg                 sync.WaitGroup
+	cancel             context.CancelFunc
+	ipmiClient         *ipmi.Client
+	collectionInterval time.Duration
+	start              time.Time
+	end                time.Time
 }
 
 // Start will start generating log entries.
@@ -32,13 +36,9 @@ func (i *Input) Start(_ operator.Persister) error {
 	i.wg.Add(1)
 	go func() {
 		defer i.wg.Done()
+		i.start = time.Now().Add(-i.collectionInterval)
+		i.end = time.Now()
 		for {
-			select {
-			case <-ctx.Done():
-				return
-			default:
-			}
-
 			selList, err := i.ipmiClient.GetSELEntries(ctx, 0)
 			if err != nil {
 				i.Logger().Error("failed to get SEL list", zap.Error(err))
@@ -52,6 +52,13 @@ func (i *Input) Start(_ operator.Persister) error {
 			if err != nil {
 				i.Logger().Error("failed to write entry", zap.Error(err))
 				return
+			}
+			select {
+			case <-ctx.Done():
+				return
+			case <-time.After(i.collectionInterval):
+				i.start = i.end
+				i.end = time.Now()
 			}
 		}
 	}()
